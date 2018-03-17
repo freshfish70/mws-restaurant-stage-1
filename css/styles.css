@@ -54,7 +54,14 @@ menu,
 nav,
 section {
   display: block;
+  width: 100%;
 }
+
+.flex-content{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -282,4 +289,16 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+@media screen and (max-width:480px){
+
+}
+
+@media screen and (max-width:736px){
+
+}
+
+@media screen and (max-width:980px){
+
 }
