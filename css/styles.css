@@ -273,20 +273,60 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 20px;
   position: relative;
-  width: calc(100% - 40px);
+  width: calc(100% - 2px);
+  border-radius: 20px 0 20px 0;
+  box-shadow: rgb(220, 220, 220) 0px 2px 20px;
 }
+
 #reviews-list li p {
-  margin: 0 0 10px;
+  margin: 20px 20px 20px 20px;
 }
+
 #restaurant-hours td {
   color: #666;
+}
+
+.review-top {
+  width: 100%;
+  background: #343434;
+  display: inline-block;
+  line-height: normal;
+  vertical-align: middle;
+  padding: 20px;
+}
+
+.review-top time {
+  display: inline-block;
+  text-align: right;
+  color: #fff;
+  width: calc(50%);
+  color: rgb(201, 201, 201);
+  text-shadow: #111 2px 2px 10px;
+}
+
+.review-name {
+  display: inline-block;
+  width: calc(50% - 40px);
+  color: #fff;
+  font-size: 1.5rem;
+  text-shadow: #111 1px 1px 2px;
+}
+
+.review-rating {
+  color: #fff;
+  background: #f18200;
+  padding: 5px 10px 5px 10px;
+  margin: 20px 20px 0 20px;
+  display: inline-block;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 3px;
+  letter-spacing: 0.1rem;
 }
 
 @media screen and (max-width: 980px) {
@@ -324,7 +364,7 @@ nav h1 a {
     width: calc(100% - 50px);
     margin: -60px 0;
     padding: 25px;
-    height:40px;
+    height: 40px;
   }
 }
 
