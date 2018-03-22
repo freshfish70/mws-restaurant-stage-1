@@ -336,7 +336,7 @@ nav h1 a {
   }
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 960px) {
   .inside header {
     position: unset;
   }
