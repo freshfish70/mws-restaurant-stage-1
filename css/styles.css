@@ -364,7 +364,6 @@ nav h1 a {
   .inside #footer {
     width: calc(100% - 50px);
     padding: 25px;
-    height: 40px;
   }
 }
 
