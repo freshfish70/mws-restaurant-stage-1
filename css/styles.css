@@ -382,3 +382,15 @@ nav h1 a {
     width: 100%;
   }
 }
+
+@media screen and (min-width: 1441px){
+  #restaurants-list li {
+    width: calc((100% / 4) - 64px);
+  }
+}
+
+@media screen and (min-width: 2000px){
+  #restaurants-list li {
+    width: calc((100% / 5) - 64px);
+  }
+}
