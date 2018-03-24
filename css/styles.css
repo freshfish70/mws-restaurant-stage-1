@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document */
 html {
-  font-size: 16px;
+  font-size: 20px;
 }
 body,
 td,
@@ -231,7 +231,7 @@ nav h1 a {
   color: #f18200;
   font-weight: 200;
   letter-spacing: 0;
-  margin: 15px 0 30px;
+  margin: 2rem 0 1.6rem;
   text-transform: uppercase;
   line-height: 1.1;
 }
@@ -338,6 +338,11 @@ nav h1 a {
 }
 
 @media screen and (max-width: 960px) {
+  #restaurant-name {
+
+    margin: .5rem 0 1.5rem;
+  }
+
   .inside header {
     position: unset;
   }
@@ -379,6 +384,11 @@ nav h1 a {
 }
 
 @media screen and (max-width: 480px) {
+
+  html{
+    font-size: 16px;
+  }
+  
   .filter-options select {
     width: 100%;
   }
