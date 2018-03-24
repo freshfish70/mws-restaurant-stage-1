@@ -163,7 +163,8 @@ nav h1 a {
 }
 #restaurants-list li {
   background-color: #fff;
-  border: 2px solid #ccc;
+  box-shadow: rgb(220, 220, 220) 0px 2px 20px;  
+  border: 1px solid #e4e4e4;
   margin: 10px;
   min-height: 380px;
   padding: 20px;
