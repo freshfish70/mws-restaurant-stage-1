@@ -92,12 +92,19 @@ nav h1 a {
   letter-spacing: 10px;
   text-transform: uppercase;
 }
-#breadcrumb {
+
+#breadcrumb-nav {
+  padding: 0;
+  text-align: left;
+  background:none;
+}
+
+#breadcrumb ol{
   padding: 10px 40px 16px;
   list-style: none;
   background-color: #eee;
   margin: 0;
-  width: calc(50% - 80px);
+  width: calc(50% - 80px);  
 }
 
 /* Display list items side by side */
@@ -121,6 +128,11 @@ nav h1 a {
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
   color: #01447e;
+  text-decoration: underline;
+}
+
+/* Add a color on mouse-over */
+#breadcrumb li a[aria-current] {
   text-decoration: underline;
 }
 /* ====================== Map ====================== */
