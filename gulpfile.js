@@ -73,7 +73,7 @@ gulp.task('scripts-watch', ['scripts'], function(done){
  * concat all JS files to a single file
  */
 gulp.task('scripts', function () {
-  return returngulp.src('./js/**/*.js')
+  return gulp.src('./js/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['env']
