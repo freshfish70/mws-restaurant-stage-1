@@ -100,7 +100,8 @@ gulp.task('prod-scripts', function () {
  * Convert images to webP format
  */
 gulp.task('convert-images', function () {
-  gulp.src(['./dist/img/*.{jpg,png}'])
+  gulp.src(['./img/*.{jpg,png}'])
+  .pipe(gulp.dest('./dist/img'))
     .pipe(webp())
     .pipe(gulp.dest('./dist/img'))
 })
