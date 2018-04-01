@@ -1,6 +1,15 @@
 var staticCacheName = 'restaurant-static-1';
 var imageCache = 'restaurant-images';
+var cacheGroup = [
+  staticCacheName,
+  imageCache
+]
 
+/**
+ * Serviceworker install event
+ * 
+ * Open cache and put eveything we want to cache into it.
+ */
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(staticCacheName).then(function (cache) {
@@ -9,26 +18,35 @@ self.addEventListener('install', function (event) {
   );
 });
 
+/**
+ * Serviceworker activation event
+ * Triggers when it is finished installing
+ * 
+ * Cleans up the cache from older versions
+ */
 self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
       return Promise.all(
         cacheNames
         .filter(function (cacheName) {
-          return (
-            cacheName.startsWith('restaurant-static-') && cacheName != staticCacheName
-          );
-        })
-        .map(function (cacheName) {
+          return
+          cacheName.startsWith('restaurant-') &&
+            !cacheGroup.includes(cacheName);
+        }).map(function (cacheName) {
           return caches.delete(cacheName);
         })
       );
     })
-  )
+  );
 });
 
+/**
+ * Fetch event handler.
+ * 
+ * Returns cached requests or fetches them
+ */
 self.addEventListener('fetch', function (event) {
-
   var requestUrl = new URL(event.request.url);
 
   // Make sure we are on the same origin
@@ -38,7 +56,7 @@ self.addEventListener('fetch', function (event) {
       return;
     }
   }
-
+  
   event.respondWith(
     caches.match(event.request).then(function (response) {
       return response || fetch(event.request);
@@ -46,14 +64,20 @@ self.addEventListener('fetch', function (event) {
   );
 });
 
+/**
+ * Check cache for the image and returns if we have the image,
+ * else go to the internet and fetch it, and store it for later
+ * 
+ * @param {ServiceWorker Fetch event} request 
+ */
 function photoCache(request) {
   var imageUrl = request.url
 
-  return caches.open(imageCache).then(function(cache){
-    return cache.match(imageUrl).then(function(response) {
+  return caches.open(imageCache).then(function (cache) {
+    return cache.match(imageUrl).then(function (response) {
       if (response) return response;
 
-      return fetch(request).then(function(responsFromNetwork){
+      return fetch(request).then(function (responsFromNetwork) {
         cache.put(imageUrl, responsFromNetwork.clone());
         return responsFromNetwork;
       });
