@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var webp = require('gulp-webp');
 var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
+var streamqueue = require('streamqueue')
 
 /**
  *  Default gulp task for development
@@ -61,7 +62,7 @@ gulp.task('styles', function () {
  * 
  * Reloads browsersync when scripts task is complete
  */
-gulp.task('scripts-watch', ['scripts'], function(done){
+gulp.task('scripts-watch', ['scripts'], function (done) {
   browserSync.reload();
   done();
 })
@@ -73,13 +74,29 @@ gulp.task('scripts-watch', ['scripts'], function(done){
  * concat all JS files to a single file
  */
 gulp.task('scripts', function () {
-  return gulp.src('./js/**/*.js')
+  streamqueue({
+        objectMode: true
+      },
+      gulp.src('./js/serviceworkerRegister.js'),
+      gulp.src('./js/dbhelper.js'),
+      gulp.src('./js/indexdb.js'),
+    )
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['env']
     }))
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist/js/'));
+  streamqueue({
+        objectMode: true
+      },
+      gulp.src('./js/main.js'),
+      gulp.src('./js/restaurant_info.js'),
+    )
+    .pipe(babel({
+      presets: ['env']
+    }))
     .pipe(gulp.dest('./dist/js/'));
 });
 
@@ -91,8 +108,32 @@ gulp.task('scripts', function () {
  * Minifies the file
  */
 gulp.task('prod-scripts', function () {
-  gulp.src('./js/**/*.js')
+  streamqueue({
+        objectMode: true
+      },
+      gulp.src('./js/serviceworkerRegister.js'),
+      gulp.src('./js/dbhelper.js'),
+      gulp.src('./js/indexdb.js'),
+    )
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['env']
+    }))
     .pipe(concat('app.js'))
+    .pipe(uglify())    
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist/js/'));
+
+  streamqueue({
+        objectMode: true
+      },
+      gulp.src('./js/main.js'),
+      gulp.src('./js/restaurant_info.js'),
+    )
+    .pipe(babel({
+      presets: ['env']
+    }))
+    .pipe(uglify())
     .pipe(gulp.dest('./dist/js/'));
 });
 
@@ -101,7 +142,7 @@ gulp.task('prod-scripts', function () {
  */
 gulp.task('convert-images', function () {
   gulp.src(['./img/*.{jpg,png}'])
-  .pipe(gulp.dest('./dist/img'))
+    .pipe(gulp.dest('./dist/img'))
     .pipe(webp())
     .pipe(gulp.dest('./dist/img'))
 })

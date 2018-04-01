@@ -29,6 +29,7 @@
     "gulp-webp": "^3.0.0"
   },
   "dependencies": {
-    "idb": "^2.1.1"
+    "idb": "^2.1.1",
+    "streamqueue": "^1.1.2"
   }
 }
