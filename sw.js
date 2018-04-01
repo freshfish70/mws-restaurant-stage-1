@@ -1,4 +1,4 @@
-var staticCacheName = 'restaurant-static-1';
+var staticCacheName = 'restaurant-static-2';
 var imageCache = 'restaurant-images';
 var cacheGroup = [
   staticCacheName,
@@ -13,7 +13,14 @@ var cacheGroup = [
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(staticCacheName).then(function (cache) {
-      return cache.addAll(['/', 'index.html', 'restaurant.html', 'js/main.js', 'js/dbhelper.js', 'js/serviceworkerRegister.js', 'js/restaurant_info.js', 'css/styles.css', 'data/restaurants.json']);
+      return cache.addAll(['/',
+        'index.html',
+        'restaurant.html', 
+        'dist/js/app.js', 
+        'dist/js/main.js', 
+        'dist/js/restaurant_info.js', 
+        'css/styles.css', 
+      ]);
     })
   );
 });
@@ -56,7 +63,7 @@ self.addEventListener('fetch', function (event) {
       return;
     }
   }
-  
+
   event.respondWith(
     caches.match(event.request).then(function (response) {
       return response || fetch(event.request);
