@@ -1,5 +1,9 @@
+import DBHelper from './dbhelper.js'
+
+(function(){
+
 let restaurant;
-var map;
+let map;
 
 /**
  * Initialize Google map, called from HTML.
@@ -180,3 +184,4 @@ const getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+})();

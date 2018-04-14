@@ -5,9 +5,13 @@ var browserSync = require('browser-sync').create();
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var webp = require('gulp-webp');
-var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
 var streamqueue = require('streamqueue')
+var source = require('vinyl-source-stream')
+var buffer = require('vinyl-buffer')
+var browserify = require('browserify')
+var es = require('event-stream');
+var babel = require('babelify');
 
 /**
  *  Default gulp task for development
@@ -67,74 +71,58 @@ gulp.task('scripts-watch', ['scripts'], function (done) {
   done();
 })
 
+
+
+var js_files = [
+  './js/main.js',
+  './js/restaurant_info.js'
+];
 /**
  * Scripts task
  * 
+ * import files with browserify
  * converts es6 to normal js for compability
  * concat all JS files to a single file
  */
 gulp.task('scripts', function () {
-  streamqueue({
-        objectMode: true
-      },
-      gulp.src('./js/serviceworkerRegister.js'),
-      gulp.src('./js/dbhelper.js'),
-      gulp.src('./js/indexdb.js'),
-    )
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(concat('app.js'))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dist/js/'));
-  streamqueue({
-        objectMode: true
-      },
-      gulp.src('./js/main.js'),
-      gulp.src('./js/restaurant_info.js'),
-    )
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(gulp.dest('./dist/js/'));
+
+  var tasks = js_files.map(function (entry){
+    return browserify({entries: [entry]})
+    .transform(babel)
+    .bundle()
+    .pipe(source(entry))
+    .pipe(gulp.dest('./dist/'))
+  });
+
+  return es.merge.apply(null, tasks)
+
 });
 
 /**
  * Prod scripts task
  * 
+ * import files with browserify 
  * converts es6 to normal js for compability
  * concat all JS files to a single file
  * Minifies the file
+ * 
  */
 gulp.task('prod-scripts', function () {
-  streamqueue({
-        objectMode: true
-      },
-      gulp.src('./js/serviceworkerRegister.js'),
-      gulp.src('./js/dbhelper.js'),
-      gulp.src('./js/indexdb.js'),
-    )
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(concat('app.js'))
-    .pipe(uglify())    
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./dist/js/'));
 
-  streamqueue({
-        objectMode: true
-      },
-      gulp.src('./js/main.js'),
-      gulp.src('./js/restaurant_info.js'),
-    )
-    .pipe(babel({
-      presets: ['env']
-    }))
+  var tasks = js_files.map(function (entry){
+    return browserify({entries: [entry]})
+    .transform(babel)
+    .bundle()
+    .pipe(source(entry))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/js/'));
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./dist/'))
+  });
+
+  return es.merge.apply(null, tasks)
+
 });
 
 /**
