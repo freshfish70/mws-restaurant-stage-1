@@ -1,11 +1,11 @@
 import DBHelper from './dbhelper.js'
 
 let main = (function () {
-  let restaurants = []
-  let neighborhoods = []
-  let cuisines = []
+  let allRestaurants = []
+  let allNeighborhoods = []
+  let allCuisines = []
   let map = null;
-  let markers = []
+  let mapMarkers = []
 
   let neighborhoodsSelect = document.getElementById('neighborhoods-select');
   let cuisinesSelect = document.getElementById('cuisines-select');
@@ -17,6 +17,9 @@ let main = (function () {
     updateRestaurants();
   }
 
+  /**
+   * Start fetching of restaurants neighborhood and cuisines
+   */
   function init() {
     fetchNeighborhoods();
     fetchCuisines();
@@ -31,8 +34,8 @@ let main = (function () {
       if (error) { // Got an error
         console.error(error);
       } else {
-        neighborhoods = neighborhoods;
-        fillNeighborhoodsHTML(neighborhoods);
+        allNeighborhoods = neighborhoods;
+        fillNeighborhoodsHTML();
       }
     });
   }
@@ -42,7 +45,7 @@ let main = (function () {
   /**
    * Set neighborhoods HTML.
    */
-  const fillNeighborhoodsHTML = (neighborhoods) => {
+  const fillNeighborhoodsHTML = (neighborhoods = allNeighborhoods) => {
     const select = document.getElementById('neighborhoods-select');
     neighborhoods.forEach(neighborhood => {
       const option = document.createElement('option');
@@ -61,7 +64,7 @@ let main = (function () {
       if (error) { // Got an error!
         console.error(error);
       } else {
-        cuisines = cuisines;
+        allCuisines = cuisines;
         fillCuisinesHTML(cuisines);
       }
     });
@@ -84,7 +87,7 @@ let main = (function () {
   /**
    * Initialize Google map, called from HTML.
    */
-  window.initMap = () => {
+  window.initMap = () => {    
     let loc = {
       lat: 40.722216,
       lng: -73.987501
@@ -130,9 +133,9 @@ let main = (function () {
     ul.innerHTML = '';
 
     // Remove all map markers
-    markers.forEach(m => m.setMap(null));
-    markers = [];
-    restaurants = restaurants;
+    mapMarkers.forEach(m => m.setMap(null));
+    mapMarkers = [];
+    allRestaurants = restaurants;
   }
 
   /**
@@ -196,12 +199,15 @@ let main = (function () {
       google.maps.event.addListener(marker, 'click', () => {
         window.location.href = marker.url
       });
-      markers.push(marker);
+      mapMarkers.push(marker);
     });
   }
+
   return {
     init
   };
+
+  
 })();
 
 
