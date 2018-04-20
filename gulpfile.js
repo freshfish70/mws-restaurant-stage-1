@@ -20,7 +20,7 @@ var babel = require('babelify');
  *  Adds watchers to sass, js and html
  *  and init BrowserSync
  */
-gulp.task('default', ['scripts', 'styles', 'convert-images'], function () {
+gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw'], function () {
   gulp.watch('./sass/**/*.scss', ['styles']);
   gulp.watch('./js/**/*.js', ['scripts-watch']);
   gulp.watch('./*.html').on('change', browserSync.reload);
@@ -66,7 +66,7 @@ gulp.task('styles', function () {
  * 
  * Reloads browsersync when scripts task is complete
  */
-gulp.task('scripts-watch', ['scripts'], function (done) {
+gulp.task('scripts-watch', ['scripts', 'sw'], function (done) {
   browserSync.reload();
   done();
 })
@@ -96,6 +96,22 @@ gulp.task('scripts', function () {
 
   return es.merge.apply(null, tasks)
 
+});
+/**
+ * Scripts task
+ * 
+ * import files with browserify
+ * converts es6 to normal js for compability
+ * concat all JS files to a single file
+ */
+gulp.task('sw', function () {
+
+    return browserify({entries: './js/sw.js'})
+    .transform(babel)
+    .bundle()
+    .pipe(source('./sw.js'))
+    .pipe(gulp.dest('./'))
+  
 });
 
 /**
