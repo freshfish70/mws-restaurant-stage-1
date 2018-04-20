@@ -17,20 +17,60 @@ export default class IDBHelper {
   /**
    * Put data to objectstore
    * 
-   * @param {string} databaseName 
+   * @param {string} objectStoreName 
    * @param {object} dataToStore 
    */
-  put(databaseName, dataToStore) {
-    this.database.then(function (db) {
-      let tx = db.transaction(databaseName, 'readwrite');
-      let restaurantStore = tx.objectStore(databaseName);
+  put(objectStoreName, dataToStore, mode = 'readwrite') {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName, mode);
+      let restaurantStore = tx.objectStore(objectStoreName);
 
-      let a = restaurantStore.put(dataToStore)
-      .then(() => {
-        console.log('Successfully put data to: ' + databaseName);
+      return restaurantStore.put(dataToStore)
+      .catch(err => {
+        console.error(err);
+      });
+
+    })
+  }
+
+  /**
+   * Get a value by key
+   * 
+   * @param {string} objectStoreName 
+   * @param {string} key 
+   */
+  get(objectStoreName, key) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.get(key)
+      .then((data) => {
+        return data;
       })
-      .catch(e => {
-        console.error(e);
+      .catch(err => {
+        console.error(err);
+      });
+
+    })
+  }
+
+  /**
+   * Get all items from the objectstore
+   * 
+   * @param {string} objectStoreName 
+   */
+  getAll(objectStoreName) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.getAll()
+      .then((data) => {
+        return data;
+      })
+      .catch(err => {
+        console.error(err);
       });
 
     })
