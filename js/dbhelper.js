@@ -15,8 +15,11 @@ export default class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL)
+  static fetchRestaurants(callback, id) {
+    let url = DBHelper.DATABASE_URL;
+    if (id) url += '/' + id
+
+    fetch(url)
       .then(function (response) {
         if (response.ok) {
           return response
@@ -30,6 +33,7 @@ export default class DBHelper {
       .catch((error) => {
         callback(error, null);
       });
+
   }
 
   /**
@@ -37,18 +41,17 @@ export default class DBHelper {
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    DBHelper.fetchRestaurants((error, restaurant) => {
       if (error) {
         callback(error, null);
       } else {
-        const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) { // Got the restaurant
           callback(null, restaurant);
         } else { // Restaurant does not exist in the database
           callback('Restaurant does not exist', null);
         }
       }
-    });
+    }, id);
   }
 
   /**
