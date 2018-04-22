@@ -72,7 +72,7 @@ self.addEventListener('fetch', function (event) {
     if (requestUrl.pathname.includes('/restaurant.html')) {
       event.respondWith(
         caches.match(requestUrl.pathname).then(function (response) {
-          console.log(response)
+
           return response || fetch(event.request)
         }))
       return;
