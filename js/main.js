@@ -1,4 +1,4 @@
-import DBHelper from './dbhelper.js'
+import restaurantHandler from './restaurantHandler'
 
 let main = (function () {
   let allRestaurants = []
@@ -21,6 +21,7 @@ let main = (function () {
    * Start fetching of restaurants neighborhood and cuisines
    */
   function init() {
+    updateRestaurants();
     fetchNeighborhoods();
     fetchCuisines();
   }
@@ -30,7 +31,7 @@ let main = (function () {
    * Fetch all neighborhoods and set their HTML.
    */
   const fetchNeighborhoods = () => {
-    DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+    restaurantHandler.getAllNeighborhoods((error, neighborhoods) => {
       if (error) { // Got an error
         console.error(error);
       } else {
@@ -59,8 +60,7 @@ let main = (function () {
    * Fetch all cuisines and set their HTML.
    */
   const fetchCuisines = () => {
-
-    DBHelper.fetchCuisines((error, cuisines) => {
+    restaurantHandler.getAllCuisines((error, cuisines) => {
       if (error) { // Got an error!
         console.error(error);
       } else {
@@ -87,7 +87,7 @@ let main = (function () {
   /**
    * Initialize Google map, called from HTML.
    */
-  window.initMap = () => {    
+  window.initMap = () => {
     let loc = {
       lat: 40.722216,
       lng: -73.987501
@@ -97,7 +97,8 @@ let main = (function () {
       center: loc,
       scrollwheel: false
     });
-    updateRestaurants();
+
+    addMarkersToMap(allRestaurants);
   }
 
   /**
@@ -113,11 +114,12 @@ let main = (function () {
     const cuisine = cSelect[cIndex].value;
     const neighborhood = nSelect[nIndex].value;
 
-    DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+    restaurantHandler.getRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
       if (error) { // Got an error!
         console.error(error);
       } else {
-        resetRestaurants(restaurants);
+        resetRestaurants();
+        allRestaurants = restaurants;
         fillRestaurantsHTML(restaurants);
       }
     })
@@ -126,16 +128,13 @@ let main = (function () {
   /**
    * Clear current restaurants, their HTML and remove their map markers.
    */
-  const resetRestaurants = (restaurants) => {
-    // Remove all restaurants
-    restaurants = [];
+  const resetRestaurants = () => {
     const ul = document.getElementById('restaurants-list');
     ul.innerHTML = '';
 
     // Remove all map markers
     mapMarkers.forEach(m => m.setMap(null));
     mapMarkers = [];
-    allRestaurants = restaurants;
   }
 
   /**
@@ -146,7 +145,7 @@ let main = (function () {
     restaurants.forEach(restaurant => {
       ul.append(createRestaurantHTML(restaurant));
     });
-    addMarkersToMap(restaurants);
+
   }
 
   /**
@@ -157,12 +156,12 @@ let main = (function () {
 
     const picture = document.createElement('picture');
     const sourceWebP = document.createElement('source');
-    sourceWebP.setAttribute('srcset', DBHelper.imageUrlForRestaurant(restaurant) + '.webp');
+    sourceWebP.setAttribute('srcset', restaurantHandler.imageUrlForRestaurant(restaurant) + '.webp');
     sourceWebP.setAttribute('type', 'image/webp');
     const image = document.createElement('img');
     image.className = 'restaurant-img';
     image.setAttribute('alt', restaurant.name + ' restaurant')
-    image.src = DBHelper.imageUrlForRestaurant(restaurant) + '.jpg';
+    image.src = restaurantHandler.imageUrlForRestaurant(restaurant) + '.jpg';
 
     picture.append(sourceWebP);
     picture.append(image);
@@ -183,7 +182,7 @@ let main = (function () {
     const more = document.createElement('a');
     more.innerHTML = 'View Details';
     more.setAttribute('aria-label', 'View ' + restaurant.name + ' details')
-    more.href = DBHelper.urlForRestaurant(restaurant);
+    more.href = restaurantHandler.urlForRestaurant(restaurant);
     li.append(more)
 
     return li
@@ -195,7 +194,7 @@ let main = (function () {
   const addMarkersToMap = (restaurants) => {
     restaurants.forEach(restaurant => {
       // Add marker to the map
-      const marker = DBHelper.mapMarkerForRestaurant(restaurant, map);
+      const marker = restaurantHandler.mapMarkerForRestaurant(restaurant, map);
       google.maps.event.addListener(marker, 'click', () => {
         window.location.href = marker.url
       });
@@ -207,7 +206,7 @@ let main = (function () {
     init
   };
 
-  
+
 })();
 
 
