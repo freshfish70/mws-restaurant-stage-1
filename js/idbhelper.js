@@ -45,6 +45,7 @@ export default class IDBHelper {
 
       return restaurantStore.get(parseInt(key))
         .then(data => {
+          if (data === undefined || data === null) return null;
           return data;
         })
         .catch(err => {
