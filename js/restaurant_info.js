@@ -27,7 +27,6 @@ import restaurantHandler from './restaurantHandler'
    * @param {Number} code 
    */
   const displayError = (errorText = 'Something went wrong...', code) => {
-    console.log('error')
     const restaurantContainer = document.getElementById('restaurant-container');
     const restaurantCuisine = document.getElementById('restaurant-cuisine');
     const errorParagraph = document.createElement('p');
