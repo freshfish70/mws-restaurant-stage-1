@@ -1,5 +1,6 @@
 import restaurantHandler from './restaurantHandler'
 import imageIntersectObserver from './intersectionObserver'
+import maps from './googleMaps'
 
 let main = (function () {
 
@@ -223,13 +224,3 @@ let main = (function () {
 document.addEventListener('DOMContentLoaded', (event) => {
   main.init();
 });
-
-window.onload = function () {
-
-  let script = document.createElement('script')
-  script.setAttribute('async', '');
-  script.setAttribute('defer', '');
-  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBHLLkh3NeC0pmKVNuxKFZfsO6V-yq5lq4&libraries=places&callback=initMap'
-  document.body.appendChild(script);
-
-}
