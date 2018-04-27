@@ -151,6 +151,7 @@ let restaurantHandler = function () {
 
     getByIdFromIDBStore('restaurants', id)
       .then((restaurant) => {
+        if (!restaurant) throw 'no records'
         callback(null, restaurant);
         callback = undefined;
       })
@@ -161,7 +162,7 @@ let restaurantHandler = function () {
           if (error) {
             return callback(error, null);
           }
-          callback ? callback(null, restaurants) : undefined;
+          callback ? callback(null, restaurant) : undefined;
         });
       })
 
