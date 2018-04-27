@@ -1,6 +1,8 @@
 import restaurantHandler from './restaurantHandler'
+import imageIntersectObserver from './intersectionObserver'
 
 let main = (function () {
+
   let allRestaurants = []
   let allNeighborhoods = []
   let allCuisines = []
@@ -97,7 +99,7 @@ let main = (function () {
       center: loc,
       scrollwheel: false
     });
-
+    
     addMarkersToMap(allRestaurants);
   }
 
@@ -121,6 +123,10 @@ let main = (function () {
         resetRestaurants();
         allRestaurants = restaurants;
         fillRestaurantsHTML(restaurants);
+        imageIntersectObserver.create({
+          track: document.querySelectorAll('source, img')
+        });
+
       }
     })
   }
@@ -156,12 +162,12 @@ let main = (function () {
 
     const picture = document.createElement('picture');
     const sourceWebP = document.createElement('source');
-    sourceWebP.setAttribute('srcset', restaurantHandler.imageUrlForRestaurant(restaurant) + '.webp');
+    sourceWebP.setAttribute('data-srcset', restaurantHandler.imageUrlForRestaurant(restaurant) + '.webp');
     sourceWebP.setAttribute('type', 'image/webp');
     const image = document.createElement('img');
     image.className = 'restaurant-img';
     image.setAttribute('alt', restaurant.name + ' restaurant')
-    image.src = restaurantHandler.imageUrlForRestaurant(restaurant) + '.jpg';
+    image.setAttribute('data-src', restaurantHandler.imageUrlForRestaurant(restaurant) + '.jpg');
 
     picture.append(sourceWebP);
     picture.append(image);
@@ -192,6 +198,7 @@ let main = (function () {
    * Add markers for current restaurants to the map.
    */
   const addMarkersToMap = (restaurants) => {
+    if (!map) return
     restaurants.forEach(restaurant => {
       // Add marker to the map
       const marker = restaurantHandler.mapMarkerForRestaurant(restaurant, map);
@@ -216,3 +223,13 @@ let main = (function () {
 document.addEventListener('DOMContentLoaded', (event) => {
   main.init();
 });
+
+window.onload = function () {
+
+  let script = document.createElement('script')
+  script.setAttribute('async', '');
+  script.setAttribute('defer', '');
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBHLLkh3NeC0pmKVNuxKFZfsO6V-yq5lq4&libraries=places&callback=initMap'
+  document.body.appendChild(script);
+
+}
