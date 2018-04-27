@@ -160,7 +160,8 @@ let restaurantHandler = function () {
       }).finally(() => {
         fetchById(id, (error, restaurant) => {
           if (error) {
-            return callback(error, null);
+            callback ? callback(error, null) : undefined;
+            return
           }
           callback ? callback(null, restaurant) : undefined;
         });
