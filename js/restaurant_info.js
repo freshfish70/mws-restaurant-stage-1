@@ -1,4 +1,4 @@
-import DBHelper from './dbhelper.js'
+import restaurantHandler from './restaurantHandler'
 
 (function(){
 
@@ -19,7 +19,7 @@ window.initMap = () => {
         scrollwheel: false
       });
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      restaurantHandler.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
 }
@@ -37,7 +37,7 @@ const fetchRestaurantFromURL = (callback) => {
     const error = 'No restaurant id in URL';
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    restaurantHandler.getRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
@@ -61,12 +61,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const pictureContainer = document.getElementById('restaurant-img');
   const sourceWebP = document.createElement('source');
-  sourceWebP.setAttribute('srcset', DBHelper.imageUrlForRestaurant(restaurant) + '.webp');
+  sourceWebP.setAttribute('srcset', restaurantHandler.imageUrlForRestaurant(restaurant) + '.webp');
   sourceWebP.setAttribute('type', 'image/webp');
   const image = document.createElement('img');
   pictureContainer.className = 'restaurant-img'
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.src = restaurantHandler.imageUrlForRestaurant(restaurant);
   image.setAttribute('alt', restaurant.name +  ' restaurant')
   pictureContainer.append(sourceWebP);
   pictureContainer.append(image);
