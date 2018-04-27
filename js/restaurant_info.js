@@ -21,6 +21,23 @@ import restaurantHandler from './restaurantHandler'
   }
 
   /**
+   * Display error message on the page
+   * 
+   * @param {String} errorText 
+   * @param {Number} code 
+   */
+  const displayError = (errorText = 'Something went wrong...', code) => {
+    console.log('error')
+    const restaurantContainer = document.getElementById('restaurant-container');
+    const restaurantCuisine = document.getElementById('restaurant-cuisine');
+    const errorParagraph = document.createElement('p');
+    errorParagraph.id = "page-error";
+    errorParagraph.innerText = errorText
+    restaurantCuisine.innerText = code
+    restaurantContainer.insertBefore(errorParagraph, restaurantContainer.firstChild);
+  }
+
+  /**
    * Get current restaurant from page URL.
    */
   const fetchRestaurantFromURL = (callback) => {
@@ -36,6 +53,7 @@ import restaurantHandler from './restaurantHandler'
       restaurantHandler.getRestaurantById(id, (error, restaurant) => {
         currentRestaurant = restaurant;
         if (!restaurant) {
+          displayError('We\'re sorry but this restaurant do not exist :(', 404);
           console.error(error);
           return;
         }
