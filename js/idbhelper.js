@@ -1,4 +1,3 @@
-
 /**
  * IDBHelper
  * 
@@ -26,9 +25,9 @@ export default class IDBHelper {
       let restaurantStore = tx.objectStore(objectStoreName);
 
       return restaurantStore.put(dataToStore)
-      .catch(err => {
-        console.error(err);
-      });
+        .catch(err => {
+          console.error(err);
+        });
 
     })
   }
@@ -44,13 +43,13 @@ export default class IDBHelper {
       let tx = db.transaction(objectStoreName);
       let restaurantStore = tx.objectStore(objectStoreName);
 
-      return restaurantStore.get(key)
-      .then((data) => {
-        return data;
-      })
-      .catch(err => {
-        console.error(err);
-      });
+      return restaurantStore.get(parseInt(key))
+        .then(data => {
+          return data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
 
     })
   }
@@ -66,12 +65,12 @@ export default class IDBHelper {
       let restaurantStore = tx.objectStore(objectStoreName);
 
       return restaurantStore.getAll()
-      .then((data) => {
-        return data;
-      })
-      .catch(err => {
-        console.error(err);
-      });
+        .then((data) => {
+          return data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
 
     })
   }
