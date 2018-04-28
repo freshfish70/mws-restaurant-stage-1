@@ -100,7 +100,7 @@ let main = (function () {
       center: loc,
       scrollwheel: false
     });
-    
+
     addMarkersToMap(allRestaurants);
   }
 
@@ -123,13 +123,26 @@ let main = (function () {
       } else {
         resetRestaurants();
         allRestaurants = restaurants;
-        fillRestaurantsHTML(restaurants);
+        restaurants.length > 0 ? fillRestaurantsHTML(restaurants) : informUser('Sorry, we can\'t find any restaurants...');
         imageIntersectObserver.create({
           track: document.querySelectorAll('source, img')
         });
 
       }
     })
+  }
+
+  /**
+   * Display error message on the page
+   * 
+   * @param {String} errorText 
+   */
+  const informUser = (errorText = 'Something went wrong...') => {
+    const restaurantContainer = document.getElementById('restaurants-list');
+    const errorParagraph = document.createElement('p');
+    errorParagraph.id = "page-error";
+    errorParagraph.innerText = errorText
+    restaurantContainer.insertAdjacentElement('beforebegin', errorParagraph);
   }
 
   /**
