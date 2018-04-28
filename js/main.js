@@ -100,7 +100,7 @@ let main = (function () {
       center: loc,
       scrollwheel: false
     });
-
+    
     addMarkersToMap(allRestaurants);
   }
 
@@ -124,6 +124,7 @@ let main = (function () {
         resetRestaurants();
         allRestaurants = restaurants;
         restaurants.length > 0 ? fillRestaurantsHTML(restaurants) : informUser('Sorry, we can\'t find any restaurants...');
+        addMarkersToMap(allRestaurants);
         imageIntersectObserver.create({
           track: document.querySelectorAll('source, img')
         });
