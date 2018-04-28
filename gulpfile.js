@@ -20,7 +20,7 @@ var babel = require('babelify');
  *  Adds watchers to sass, js and html
  *  and init BrowserSync
  */
-gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw'], function () {
+gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons'], function () {
   gulp.watch('./sass/**/*.scss', ['styles']);
   gulp.watch('./js/**/*.js', ['scripts-watch']);
   gulp.watch('./*.html').on('change', browserSync.reload);
@@ -149,4 +149,12 @@ gulp.task('convert-images', function () {
     .pipe(gulp.dest('./dist/img'))
     .pipe(webp())
     .pipe(gulp.dest('./dist/img'))
+})
+
+/**
+ * Convert images to webP format
+ */
+gulp.task('move-icons', function () {
+  gulp.src(['./img/icons/*.png'])
+    .pipe(gulp.dest('./dist/img/icons'))
 })
