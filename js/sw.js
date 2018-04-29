@@ -26,6 +26,11 @@ self.addEventListener('install', function (event) {
         'dist/js/restaurant_info.js',
         'css/styles.css',
       ]);
+    }),
+    caches.open(imageCache).then(function (cache) {
+      return cache.addAll(['/',
+        'dist/img/no-img.svg',
+      ]);
     })
   );
 });
@@ -95,14 +100,16 @@ self.addEventListener('fetch', function (event) {
  */
 function photoCache(request) {
   var imageUrl = request.url
-
   return caches.open(imageCache).then(function (cache) {
     return cache.match(imageUrl).then(function (response) {
       if (response) return response;
-
       return fetch(request).then(function (responsFromNetwork) {
         cache.put(imageUrl, responsFromNetwork.clone());
         return responsFromNetwork;
+      }).catch(error => {
+        return cache.match('dist/img/no-img.svg').then(function (response) {
+          return response;
+        });
       });
     });
   });
