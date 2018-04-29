@@ -277,7 +277,7 @@ let restaurantHandler = function () {
    * Restaurant image URL.
    */
   function imageUrlForRestaurant(restaurant) {
-    return (`/dist/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}`);
   }
 
   /**

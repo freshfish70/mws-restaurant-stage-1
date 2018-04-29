@@ -21,15 +21,15 @@ self.addEventListener('install', function (event) {
       return cache.addAll(['/',
         'index.html',
         'restaurant.html',
-        'dist/js/main.js',
+        'js/main.js',
         'js/serviceworkerRegister.js',
-        'dist/js/restaurant_info.js',
+        'js/restaurant_info.js',
         'css/styles.css',
       ]);
     }),
     caches.open(imageCache).then(function (cache) {
       return cache.addAll(['/',
-        'dist/img/no-img.svg',
+        'img/no-img.svg',
       ]);
     })
   );
@@ -69,7 +69,7 @@ self.addEventListener('fetch', function (event) {
 
   // Make sure we are on the same origin
   if (requestUrl.origin === location.origin) {
-    if (requestUrl.pathname.startsWith('/dist/img/')) {
+    if (requestUrl.pathname.startsWith('/img/')) {
       event.respondWith(photoCache(event.request));
       return;
     }
@@ -107,7 +107,7 @@ function photoCache(request) {
         cache.put(imageUrl, responsFromNetwork.clone());
         return responsFromNetwork;
       }).catch(error => {
-        return cache.match('dist/img/no-img.svg').then(function (response) {
+        return cache.match('img/no-img.svg').then(function (response) {
           return response;
         });
       });

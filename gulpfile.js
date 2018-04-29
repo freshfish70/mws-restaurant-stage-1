@@ -20,17 +20,22 @@ var babel = require('babelify');
  *  Adds watchers to sass, js and html
  *  and init BrowserSync
  */
-gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons'], function () {
+gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons', 'move-html', 'move_scipts'], function () {
   gulp.watch('./sass/**/*.scss', ['styles']);
   gulp.watch('./js/**/*.js', ['scripts-watch']);
-  gulp.watch('./*.html').on('change', browserSync.reload);
+  gulp.watch('./*.html', ['move-html']).on('change', browserSync.reload);
 
   browserSync.init({
     server: {
-      baseDir: "./"
+      baseDir: "./dist"
     }
   });
 });
+
+gulp.task('move-html', function() {
+  gulp.src(['./index.html', './restaurant.html'])
+  .pipe(gulp.dest('dist'))
+})
 
 /**
  * Production task
@@ -50,7 +55,7 @@ gulp.task('prod', [
  * prefixes css 
  */
 gulp.task('styles', function () {
-  gulp.src('sass/**/*.scss')
+  gulp.src('css/**/*.css')
     .pipe(sass({
       outputStyle: 'compressed'
     }).on('error', sass.logError))
@@ -66,7 +71,7 @@ gulp.task('styles', function () {
  * 
  * Reloads browsersync when scripts task is complete
  */
-gulp.task('scripts-watch', ['scripts', 'sw'], function (done) {
+gulp.task('scripts-watch', ['scripts', 'sw', 'move_scipts'], function (done) {
   browserSync.reload();
   done();
 })
@@ -97,6 +102,28 @@ gulp.task('scripts', function () {
   return es.merge.apply(null, tasks)
 
 });
+
+var js_move_files = [
+  './js/serviceworkerRegister.js',
+];
+/**
+ * Scripts task
+ * 
+ * import files with browserify
+ * converts es6 to normal js for compability
+ * concat all JS files to a single file
+ */
+gulp.task('move_scipts', function () {
+
+  var tasks = js_move_files.map(function (entry){
+    return browserify({entries: [entry]})
+    .transform(babel)
+    .bundle()
+    .pipe(source(entry))
+    .pipe(gulp.dest('./dist/'))
+  });
+
+});
 /**
  * Scripts task
  * 
@@ -110,7 +137,7 @@ gulp.task('sw', function () {
     .transform(babel)
     .bundle()
     .pipe(source('./sw.js'))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('dist'))
   
 });
 
