@@ -358,6 +358,29 @@ nav h1 a {
   padding: 50px 0;
 }
 
+#offline-notice{
+  position: fixed;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  background: #252831;
+  padding: 5px;
+  border-radius: 3px;
+  text-align: center;
+  z-index: 10;
+  color: #eee;
+  margin: 0 10px;
+}
+
+#offline-notice button{
+  background: none;
+  border: 0;
+  color: red;
+  font-size: 1rem;
+  position: absolute;
+  right: 10px;
+}
+
 @media screen and (max-width: 980px) {
   #restaurants-list li {
     width: calc((100% / 2) - 65px);
