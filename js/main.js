@@ -1,5 +1,6 @@
 import restaurantHandler from './restaurantHandler'
 import imageIntersectObserver from './intersectionObserver'
+import offlineNotice from './offlineNotice'
 import maps from './googleMaps'
 
 let main = (function () {

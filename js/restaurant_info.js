@@ -1,4 +1,5 @@
 import restaurantHandler from './restaurantHandler'
+import offlineNotice from './offlineNotice'
 import maps from './googleMaps'
 
 (function () {
