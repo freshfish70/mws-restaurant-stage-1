@@ -12,6 +12,7 @@ var buffer = require('vinyl-buffer')
 var browserify = require('browserify')
 var es = require('event-stream');
 var babel = require('babelify');
+var htmlmin = require('gulp-htmlmin');
 
 /**
  *  Default gulp task for development
@@ -21,7 +22,7 @@ var babel = require('babelify');
  *  and init BrowserSync
  */
 gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons', 'move-html', 'move_scipts'], function () {
-  gulp.watch('./sass/**/*.scss', ['styles']);
+  gulp.watch('./css/**/*.css', ['styles']);
   gulp.watch('./js/**/*.js', ['scripts-watch']);
   gulp.watch('./*.html', ['move-html']).on('change', browserSync.reload);
 
@@ -32,9 +33,17 @@ gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons',
   });
 });
 
-gulp.task('move-html', function() {
+gulp.task('move-html', function () {
   gulp.src(['./index.html', './restaurant.html'])
-  .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist'))
+})
+
+gulp.task('prod-html', function () {
+  gulp.src(['./index.html', './restaurant.html'])
+    .pipe(htmlmin({
+      collapseWhitespace: true
+    }))
+    .pipe(gulp.dest('dist'))
 })
 
 /**
@@ -45,7 +54,11 @@ gulp.task('move-html', function() {
 gulp.task('prod', [
   'prod-scripts',
   'styles',
-  'convert-images'
+  'convert-images',
+  'sw',
+  'move-icons',
+  'prod-html',
+  'move_scipts'
 ]);
 
 /**
@@ -91,12 +104,14 @@ var js_files = [
  */
 gulp.task('scripts', function () {
 
-  var tasks = js_files.map(function (entry){
-    return browserify({entries: [entry]})
-    .transform(babel)
-    .bundle()
-    .pipe(source(entry))
-    .pipe(gulp.dest('./dist/'))
+  var tasks = js_files.map(function (entry) {
+    return browserify({
+        entries: [entry]
+      })
+      .transform(babel)
+      .bundle()
+      .pipe(source(entry))
+      .pipe(gulp.dest('./dist/'))
   });
 
   return es.merge.apply(null, tasks)
@@ -115,12 +130,14 @@ var js_move_files = [
  */
 gulp.task('move_scipts', function () {
 
-  var tasks = js_move_files.map(function (entry){
-    return browserify({entries: [entry]})
-    .transform(babel)
-    .bundle()
-    .pipe(source(entry))
-    .pipe(gulp.dest('./dist/'))
+  var tasks = js_move_files.map(function (entry) {
+    return browserify({
+        entries: [entry]
+      })
+      .transform(babel)
+      .bundle()
+      .pipe(source(entry))
+      .pipe(gulp.dest('./dist/'))
   });
 
 });
@@ -133,12 +150,14 @@ gulp.task('move_scipts', function () {
  */
 gulp.task('sw', function () {
 
-    return browserify({entries: './js/sw.js'})
+  return browserify({
+      entries: './js/sw.js'
+    })
     .transform(babel)
     .bundle()
     .pipe(source('./sw.js'))
     .pipe(gulp.dest('dist'))
-  
+
 });
 
 /**
@@ -152,16 +171,18 @@ gulp.task('sw', function () {
  */
 gulp.task('prod-scripts', function () {
 
-  var tasks = js_files.map(function (entry){
-    return browserify({entries: [entry]})
-    .transform(babel)
-    .bundle()
-    .pipe(source(entry))
-    .pipe(buffer())
-    .pipe(sourcemaps.init())
-    .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./dist/'))
+  var tasks = js_files.map(function (entry) {
+    return browserify({
+        entries: [entry]
+      })
+      .transform(babel)
+      .bundle()
+      .pipe(source(entry))
+      .pipe(buffer())
+      .pipe(sourcemaps.init())
+      .pipe(uglify())
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./dist/'))
   });
 
   return es.merge.apply(null, tasks)
