@@ -21,7 +21,7 @@ li {
   color: #333;
 }
 a {
-  color: orange;
+  color: #ff6366;
   text-decoration: none;
 }
 a:hover,
@@ -66,8 +66,8 @@ section {
   min-height: 100%;
 }
 #footer {
-  background-color: #444;
-  color: #aaa;
+  background-color: #252831;
+  color: #ccc;
   font-size: 0.8rem;
   letter-spacing: 1px;
   padding: 25px 0;
@@ -121,7 +121,7 @@ nav h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-  color: #0275d8;
+  color: #0061b4;
   text-decoration: none;
 }
 
@@ -140,6 +140,10 @@ nav h1 a {
   height: 400px;
   width: 100%;
   background-color: #ccc;
+}
+#map img{
+  width: 100%;
+  height:100%;
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -193,7 +197,7 @@ nav h1 a {
   min-width: 100%;
 }
 #restaurants-list li h2 {
-  color: #f18200;
+  color: #d1494c;
   font-weight: 200;
   line-height: 1.3;
   margin: 20px 0 10px;
@@ -203,7 +207,7 @@ nav h1 a {
   margin: 0;
 }
 #restaurants-list li a {
-  background-color: orange;
+  background-color: #bc3437;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
@@ -215,7 +219,7 @@ nav h1 a {
 }
 #restaurants-list li > a:hover , 
 #restaurants-list li > a:focus {
-  background: rgb(238, 128, 2);
+  background: #d24144;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -244,7 +248,7 @@ nav h1 a {
   width: 50%;
 }
 #restaurant-name {
-  color: #f18200;
+  color: #d1494c;
   font-weight: 200;
   letter-spacing: 0;
   margin: 2rem 0 1.6rem;
@@ -252,7 +256,7 @@ nav h1 a {
   line-height: 1.1;
   font-size: 2rem;
 }
-#restaurant-img {
+.restaurant-img {
   width: 100%;
 }
 #restaurant-address {
@@ -280,7 +284,7 @@ nav h1 a {
   padding: 40px 40px;
 }
 #reviews-container h3 {
-  color: #f58500;
+  color: #d1494c;
   font-size: 1.5rem;
   font-weight: 300;
   letter-spacing: -1px;
@@ -338,7 +342,7 @@ nav h1 a {
 
 .review-rating {
   color: #fff;
-  background: #f18200;
+  background: #bc3437;
   padding: 5px 10px 5px 10px;
   margin: 20px 20px 0 20px;
   display: inline-block;
@@ -346,6 +350,35 @@ nav h1 a {
   font-weight: bold;
   border-radius: 3px;
   letter-spacing: 0.1rem;
+}
+
+#page-error{
+  font-size: 2rem;
+  text-align: center;
+  padding: 50px 0;
+}
+
+#offline-notice{
+  position: fixed;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  background: #252831;
+  padding: 5px;
+  border-radius: 3px;
+  text-align: center;
+  z-index: 10;
+  color: #eee;
+  margin: 0 10px;
+}
+
+#offline-notice button{
+  background: none;
+  border: 0;
+  color: red;
+  font-size: 1rem;
+  position: absolute;
+  right: 10px;
 }
 
 @media screen and (max-width: 980px) {

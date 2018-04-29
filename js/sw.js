@@ -1,3 +1,8 @@
+import idbhelper from './idbhelper'
+import restaurantDB from './database'
+
+let idb = new idbhelper(restaurantDB);
+
 var staticCacheName = 'restaurant-static-2';
 var imageCache = 'restaurant-images';
 var cacheGroup = [
@@ -15,11 +20,16 @@ self.addEventListener('install', function (event) {
     caches.open(staticCacheName).then(function (cache) {
       return cache.addAll(['/',
         'index.html',
-        'restaurant.html', 
-        'dist/js/app.js', 
-        'dist/js/main.js', 
-        'dist/js/restaurant_info.js', 
-        'css/styles.css', 
+        'restaurant.html',
+        'js/main.js',
+        'js/serviceworkerRegister.js',
+        'js/restaurant_info.js',
+        'css/styles.css',
+      ]);
+    }),
+    caches.open(imageCache).then(function (cache) {
+      return cache.addAll(['/',
+        'img/no-img.svg',
       ]);
     })
   );
@@ -54,22 +64,33 @@ self.addEventListener('activate', function (event) {
  * Returns cached requests or fetches them
  */
 self.addEventListener('fetch', function (event) {
-  var requestUrl = new URL(event.request.url);
+  let requestUrl = new URL(event.request.url);
+
 
   // Make sure we are on the same origin
   if (requestUrl.origin === location.origin) {
-    if (requestUrl.pathname.startsWith('/dist/img/')) {
+    if (requestUrl.pathname.startsWith('/img/')) {
       event.respondWith(photoCache(event.request));
+      return;
+    }
+
+    if (requestUrl.pathname.includes('/restaurant.html')) {
+      event.respondWith(
+        caches.match(requestUrl.pathname).then(function (response) {
+
+          return response || fetch(event.request)
+        }))
       return;
     }
   }
 
   event.respondWith(
     caches.match(event.request).then(function (response) {
-      return response || fetch(event.request);
+      return response || fetch(event.request)
     })
   );
 });
+
 
 /**
  * Check cache for the image and returns if we have the image,
@@ -79,14 +100,16 @@ self.addEventListener('fetch', function (event) {
  */
 function photoCache(request) {
   var imageUrl = request.url
-
   return caches.open(imageCache).then(function (cache) {
     return cache.match(imageUrl).then(function (response) {
       if (response) return response;
-
       return fetch(request).then(function (responsFromNetwork) {
         cache.put(imageUrl, responsFromNetwork.clone());
         return responsFromNetwork;
+      }).catch(error => {
+        return cache.match('img/no-img.svg').then(function (response) {
+          return response;
+        });
       });
     });
   });
