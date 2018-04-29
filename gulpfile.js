@@ -26,6 +26,9 @@ gulp.task('default', ['scripts', 'styles', 'convert-images', 'sw', 'move-icons',
   gulp.watch('./js/**/*.js', ['scripts-watch']);
   gulp.watch('./*.html', ['move-html']).on('change', browserSync.reload);
 
+  gulp.src(['./manifest.json'])
+    .pipe(gulp.dest('dist'))
+
   browserSync.init({
     server: {
       baseDir: "./dist"
@@ -59,7 +62,10 @@ gulp.task('prod', [
   'move-icons',
   'prod-html',
   'move_scipts'
-]);
+], function () {
+  gulp.src(['./manifest.json'])
+    .pipe(gulp.dest('dist'))
+});
 
 /**
  * Styles task (sass/css)
