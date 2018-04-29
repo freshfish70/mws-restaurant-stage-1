@@ -185,7 +185,8 @@ nav h1 a {
   min-height: 380px;
   padding: 20px;
   list-style: none;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   text-align: left;
   width: calc((100% / 3) - 64px);
 }
@@ -204,16 +205,16 @@ nav h1 a {
   text-transform: uppercase;
 }
 #restaurants-list p {
-  margin: 0;
+  margin: 0 0 10px 0;
 }
 #restaurants-list li a {
   background-color: #bc3437;
   border-bottom: 3px solid #eee;
   color: #fff;
-  display: inline-block;
-  margin: 15px 0 0;
+  display: flex;
+  margin-top:auto;
   padding: 8px 30px 10px;
-  text-align: center;
+  justify-content: center;
   text-decoration: none;
   text-transform: uppercase;
 }
