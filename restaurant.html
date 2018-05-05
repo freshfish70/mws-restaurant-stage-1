@@ -51,6 +51,31 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
+      <form id="restaurant-review-form">
+        <div>
+          
+        
+        <label for="user-name">Name</label>
+        <input name="user-name" id="user-name-input" type="text" placeholder="Your name" required>
+
+        
+        <label for="user-name">Review</label>
+        <textarea name="review" id="review-input" rows="6" placeholder="Your review" required></textarea>
+
+        <label for="rating">Rating</label>
+        <fieldset id="rating">
+            <label>1<input id="rating-1" type="radio" value="1" name="group1"></label>
+            <label>2<input id="rating-2" type="radio" value="2" name="group1"></label>
+            <label>3<input id="rating-3" type="radio" value="3" name="group1"></label>
+            <label>4<input id="rating-4" type="radio" value="4" name="group1"></label>
+            <label>5<input id="rating-5" type="radio" value="5" name="group1"></label>
+        </fieldset>
+
+        <input type="button" value="Submit">
+        
+      </div>
+      </form>
+
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
