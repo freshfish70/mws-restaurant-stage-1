@@ -287,7 +287,7 @@ let restaurantHandler = function () {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
       title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
+      url: urlForRestaurant(restaurant),
       map: map,
       animation: google.maps.Animation.DROP
     });
