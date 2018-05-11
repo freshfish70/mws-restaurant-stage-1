@@ -14,7 +14,7 @@ if (!'serviceWorker' in navigator) {
  * Setup indexes
  * 
  */
-  db = idb.open('restaurant', 2, function (upgradeDB) {
+  db = idb.open('restaurant', 3, function (upgradeDB) {
     switch (upgradeDB.oldVersion) {
       case 0:
         upgradeDB.createObjectStore('restaurants', {
@@ -26,6 +26,14 @@ if (!'serviceWorker' in navigator) {
         let restaurantStore2 = upgradeDB.transaction.objectStore('restaurants');
         restaurantStore2.createIndex('cuisine_type', 'cuisine_type');
         restaurantStore2.createIndex('neighborhood', 'neighborhood');
+      case 2:
+        upgradeDB.createObjectStore('reviews', {
+          keyPath: 'id'
+        })
+        let reviewStore = upgradeDB.transaction.objectStore('reviews');
+        reviewStore.createIndex('restaurant_id', 'id')
+        let restaurantStore3 = upgradeDB.transaction.objectStore('restaurants');
+        restaurantStore3.createIndex('is_favorite', 'is_favorite');
 
     }
   });
