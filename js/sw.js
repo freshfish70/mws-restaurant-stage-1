@@ -1,8 +1,3 @@
-import idbhelper from './idbhelper'
-import restaurantDB from './database'
-
-let idb = new idbhelper(restaurantDB);
-
 var staticCacheName = 'restaurant-static-2';
 var imageCache = 'restaurant-images';
 var cacheGroup = [
