@@ -31,7 +31,7 @@ if (!'serviceWorker' in navigator) {
           keyPath: 'id'
         })
         let reviewStore = upgradeDB.transaction.objectStore('reviews');
-        reviewStore.createIndex('restaurant_id', 'id')
+        reviewStore.createIndex('restaurant_id', 'restaurant_id')
         let restaurantStore3 = upgradeDB.transaction.objectStore('restaurants');
         restaurantStore3.createIndex('is_favorite', 'is_favorite');
 
