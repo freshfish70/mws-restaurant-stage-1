@@ -1,8 +1,14 @@
 import idbhelper from './idbhelper'
 import DBHelper from './dbhelper.js'
 import restaurantDB from './database'
+import restaurantHelper from './restaurantHelper'
+import apiHelper from './apiHelper'
 
-let restaurantHandler = function () {
+/**
+ * 
+ * @param {restaurantHelper} api 
+ */
+let restaurantHandler = function (api) {
 
   const idb = new idbhelper(restaurantDB);
 
@@ -93,7 +99,7 @@ let restaurantHandler = function () {
   function fetchAll(callback) {
 
     if (fetchTimerPassed()) {
-      DBHelper.fetchRestaurants((error, restaurants) => {
+      api.getAllRestaurants((error, restaurants) => {
         if (error) return callback(error, null);
         putItemsToIDB('restaurants', restaurants);
         callback(null, restaurants);
@@ -109,7 +115,7 @@ let restaurantHandler = function () {
    */
   function fetchById(id, callback) {
 
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    api.getRestaurantByID(id, (error, restaurant) => {
       if (error) return callback(error, null);
       putItemsToIDB('restaurants', [restaurant]);
       callback(null, restaurant);
@@ -260,7 +266,24 @@ let restaurantHandler = function () {
       DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
         if (error) return callback(error, null);
         putItemsToIDB('restaurants', restaurants);
-        callback ? callback(null, filterRestaurantByCuisineNeighborhood(cuisine, neighborhood, restaurants)) : undefined ;
+        callback ? callback(null, filterRestaurantByCuisineNeighborhood(cuisine, neighborhood, restaurants)) : undefined;
+      });
+    })
+
+  }
+
+  function getAllReviewsForRestaurant(id, callback) {
+
+    getAllFromIDBStore('reviews').then(reviews => {
+      callback(null, reviews);
+      callback = undefined;
+    }).catch(err => {
+      console.warn('Failed too get reviews from idb, fetching');
+    }).finally(() => {
+      api.getRestaurantReviews(id, (error, reviews) => {
+        if (error) return callback(error, null);
+        putItemsToIDB('reviews', reviews);
+        callback ? callback(null, reviews) : undefined;
       });
     })
 
@@ -306,9 +329,14 @@ let restaurantHandler = function () {
     getRestaurantByCuisineAndNeighborhood,
     urlForRestaurant,
     imageUrlForRestaurant,
-    mapMarkerForRestaurant
+    mapMarkerForRestaurant,
+    getAllReviewsForRestaurant
   })
 
 }
 
-export default restaurantHandler();
+export default restaurantHandler(
+  restaurantHelper(apiHelper({
+    url: 'http://127.0.0.1:1337/'
+  }))
+);

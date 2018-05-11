@@ -94,7 +94,11 @@ import maps from './googleMaps'
       fillRestaurantHoursHTML();
     }
     // fill reviews
-    fillReviewsHTML();
+    restaurantHandler.getAllReviewsForRestaurant(restaurant.id, (error, reviews)=>{
+      if (error) console.warn(error);
+      fillReviewsHTML(reviews);
+    });
+    
   }
 
   /**
@@ -121,6 +125,7 @@ import maps from './googleMaps'
    * Create all reviews HTML and add them to the webpage.
    */
   const fillReviewsHTML = (reviews = currentRestaurant.reviews) => {
+    
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
@@ -155,7 +160,8 @@ import maps from './googleMaps'
     reviewTop.appendChild(name);
 
     const date = document.createElement('time');
-    date.innerHTML = review.date;
+    const dateTime = new Date(review.updatedAt);
+    date.innerHTML = (dateTime.getMonth() + 1) + '/' + dateTime.getDate() + '/' + dateTime.getFullYear();
     reviewTop.appendChild(date);
 
     const rating = document.createElement('span');
