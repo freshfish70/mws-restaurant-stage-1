@@ -110,24 +110,12 @@ const restaurantHelper = function restaurantHelper(api) {
   /**
    * Favorite a restaurant by ID
    * 
-   * @param {Number} id 
+   * @param {Object} {id: number, favorite: bool}
    * @param {Function} callback 
    */
-  function favoriteRestaurantByID(id, callback) {
+  function favoriteRestaurantByID(options, callback) {
     api.execute('put', {
-      url: `restaurants/${id}/?is_favorite=true`
-    }, callback);
-  }
-
-  /**
-   * Unfavorite a restaurant by ID
-   * 
-   * @param {Number} id 
-   * @param {Function} callback 
-   */
-  function unFavoriteRestaurantByID(id, callback) {
-    api.execute('put', {
-      url: `restaurants/${id}/?is_favorite=false`
+      url: `restaurants/${options.id}/?is_favorite=${options.favorite}`
     }, callback);
   }
 
@@ -173,7 +161,6 @@ const restaurantHelper = function restaurantHelper(api) {
     getReviewById,
     createReview,
     favoriteRestaurantByID,
-    unFavoriteRestaurantByID,
     updateRestaurantViewByID,
     deleteReviewByID
   });
