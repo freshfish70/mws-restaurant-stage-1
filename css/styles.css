@@ -537,3 +537,21 @@ input[type=button] {
     width: calc((100% / 5) - 64px);
   }
 }
+
+.star-front{
+  position: relative;
+}
+
+.star-active{
+  color:yellow;
+}
+
+.star-front::after{
+  position: absolute;
+  margin: 0 25px;
+  padding: 0 10px;
+  font-size: 2rem;
+  background: #fff;
+  right: 0;
+  content:"★";
+}
