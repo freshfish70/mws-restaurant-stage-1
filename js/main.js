@@ -174,7 +174,7 @@ let main = (function () {
 
     favoriteDiv.className = "star-front"
     if (isFavorite === "true") {
-      fave.classList.add("star-active");
+      favoriteDiv.classList.add("star-active");
     };
     return favoriteDiv;
   }
