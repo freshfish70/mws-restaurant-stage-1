@@ -459,7 +459,7 @@ textarea {
 }
 
 input[type=button], button {
-  padding: 10px 5px;
+  padding: 10px 15px;
   color: #fff;
   background: #252931;
 }
