@@ -437,13 +437,15 @@ nav h1 a {
   margin: 0px 25px 0 10px;
 }
 
-fieldset {
+fieldset,
+button {
   border: 0;
 }
 
 input,
 textarea,
-fieldset {
+fieldset,
+button {
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 1rem;
@@ -456,7 +458,7 @@ textarea {
   border: 1px solid #ccc;
 }
 
-input[type=button] {
+input[type=button], button {
   padding: 10px 5px;
   color: #fff;
   background: #252931;
