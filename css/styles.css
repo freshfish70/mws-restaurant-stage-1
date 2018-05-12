@@ -458,10 +458,12 @@ textarea {
 
 input[type=button] {
   padding: 10px 5px;
-  margin: 10px 0 20px 0;
-  width: 140px;
   color: #fff;
   background: #252931;
+}
+
+#restaurant-review-form input[type=button] {
+  width:140px;
 }
 
 #restaurant-review-form input[type=button]:hover {
