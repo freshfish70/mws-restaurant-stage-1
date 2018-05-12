@@ -56,6 +56,31 @@ export default class IDBHelper {
   }
 
   /**
+   * Get all items in objectstore by index and value
+   * 
+   * @param {String} objectStoreName 
+   * @param {String} index 
+   * @param {String|Number} value 
+   */
+  getByIndex(objectStoreName, index, value = null) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+      let storeIndex = restaurantStore.index(index);
+
+      return storeIndex.getAll(value)
+        .then(data => {
+          if (data === undefined || data === null) return null;
+          return data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+    })
+  }
+
+  /**
    * Get all items from the objectstore
    * 
    * @param {string} objectStoreName 
