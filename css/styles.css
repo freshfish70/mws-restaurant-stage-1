@@ -559,3 +559,7 @@ input[type=button], button {
   right: 0;
   content:"★";
 }
+
+.star-single::after{
+  content:"★";
+}
