@@ -115,7 +115,7 @@ const restaurantHelper = function restaurantHelper(api) {
    */
   function favoriteRestaurantByID(options, callback) {
     api.execute('put', {
-      url: `restaurants/${options.id}/?is_favorite=${options.favorite}`
+      url: `restaurants/${options.id}/?is_favorite=${options.is_favorite}`
     }, callback);
   }
 
