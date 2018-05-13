@@ -290,6 +290,22 @@ let restaurantHandler = function (api) {
   }
 
   /**
+   * Favorite a restaurant
+   * setting it in IDB and updating server
+   * 
+   * @param {Object} restaurantObject 
+   * @param {Function} callback 
+   */
+  function favoriteRestaurant(restaurantObject, callback) {
+    let restaurant = idb.put('restaurants', restaurantObject)
+    restaurant.then((ae) => {
+      api.favoriteRestaurantByID(restaurantObject, callback);
+    }).catch((error) => {
+      callback(error, null)
+    })
+  }
+
+  /**
    * Restaurant page URL.
    */
   function urlForRestaurant(restaurant) {
@@ -330,7 +346,8 @@ let restaurantHandler = function (api) {
     urlForRestaurant,
     imageUrlForRestaurant,
     mapMarkerForRestaurant,
-    getAllReviewsForRestaurant
+    getAllReviewsForRestaurant,
+    favoriteRestaurant
   })
 
 }

@@ -6,6 +6,39 @@ import maps from './googleMaps'
 
   let currentRestaurant;
   let map;
+
+  function createFavoriteButton() {
+    const addText = "Add to favorite ";
+    const removeText = "Remove favorite ";
+    const favoriteButton = document.getElementById('favorite-button');
+    const star = document.createElement('span');
+
+    function setTextAndStar() {
+      if (currentRestaurant.is_favorite === 'true') {
+        favoriteButton.innerText = removeText;
+        star.classList.add('star-active');
+      } else {
+        favoriteButton.innerText = addText;
+        star.classList.remove('star-active');
+      }
+      favoriteButton.appendChild(star);
+      star.classList.add("star-single");
+    }
+
+    setTextAndStar();
+
+    favoriteButton.addEventListener('click', () => {
+      currentRestaurant.is_favorite = currentRestaurant.is_favorite === 'true' ? 'false' : 'true';
+      restaurantHandler.favoriteRestaurant(currentRestaurant, (error, result) => {
+        if (error) {
+          console.log(error)
+          return
+        }
+        setTextAndStar();
+      });
+    })
+  }
+
   /**
    * Initialize Google map, called from HTML.
    */
@@ -59,6 +92,7 @@ import maps from './googleMaps'
           return;
         }
         fillRestaurantHTML();
+        createFavoriteButton();
         callback(null, restaurant)
       });
     }
@@ -94,11 +128,11 @@ import maps from './googleMaps'
       fillRestaurantHoursHTML();
     }
     // fill reviews
-    restaurantHandler.getAllReviewsForRestaurant(restaurant.id, (error, reviews)=>{
+    restaurantHandler.getAllReviewsForRestaurant(restaurant.id, (error, reviews) => {
       if (error) console.warn(error);
       fillReviewsHTML(reviews);
     });
-    
+
   }
 
   /**
@@ -125,7 +159,7 @@ import maps from './googleMaps'
    * Create all reviews HTML and add them to the webpage.
    */
   const fillReviewsHTML = (reviews = currentRestaurant.reviews) => {
-    
+
     const container = document.getElementById('reviews-container');
     const title = document.createElement('h3');
     title.innerHTML = 'Reviews';
