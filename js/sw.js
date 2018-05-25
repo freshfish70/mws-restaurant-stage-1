@@ -73,7 +73,9 @@ self.addEventListener('fetch', function (event) {
       event.respondWith(
         caches.match(requestUrl.pathname).then(function (response) {
 
-          return response || fetch(event.request)
+          return response || fetch(event.request).catch((error) => {
+            console.error(error)
+          })
         }))
       return;
     }
@@ -81,7 +83,9 @@ self.addEventListener('fetch', function (event) {
 
   event.respondWith(
     caches.match(event.request).then(function (response) {
-      return response || fetch(event.request)
+      return response || fetch(event.request).catch((error) => {
+        console.error(error)
+      })
     })
   );
 });
