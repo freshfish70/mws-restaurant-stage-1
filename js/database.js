@@ -10,11 +10,11 @@ if (!'serviceWorker' in navigator) {
 } else {
 
   /**
- * Initialize all objectstores in our app
- * Setup indexes
- * 
- */
-  db = idb.open('restaurant', 3, function (upgradeDB) {
+   * Initialize all objectstores in our app
+   * Setup indexes
+   * 
+   */
+  db = idb.open('restaurant', 4, function (upgradeDB) {
     switch (upgradeDB.oldVersion) {
       case 0:
         upgradeDB.createObjectStore('restaurants', {
@@ -34,7 +34,15 @@ if (!'serviceWorker' in navigator) {
         reviewStore.createIndex('restaurant_id', 'restaurant_id')
         let restaurantStore3 = upgradeDB.transaction.objectStore('restaurants');
         restaurantStore3.createIndex('is_favorite', 'is_favorite');
-
+      case 3:
+        upgradeDB.createObjectStore('sync-review', {
+          autoIncrement: true
+        })
+        upgradeDB.createObjectStore('sync-favorite', {
+          keyPath: 'restaurantId'
+        })
+        let syncReview = upgradeDB.transaction.objectStore('sync-review');
+        let syncFavorite = upgradeDB.transaction.objectStore('sync-favorite');
     }
   });
 }
