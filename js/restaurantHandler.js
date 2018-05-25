@@ -290,6 +290,16 @@ let restaurantHandler = function (api) {
   }
 
   /**
+   * Put review/favorite to IDB for syncing with database when online
+   * 
+   * @param {String} storeName 
+   * @param {Object} object 
+   */
+  function saveForSync(storeName, objectData) {
+    idb.put(storeName, objectData);
+  }
+
+  /**
    * Favorite a restaurant
    * setting it in IDB and updating server
    * 
@@ -298,8 +308,16 @@ let restaurantHandler = function (api) {
    */
   function favoriteRestaurant(restaurantObject, callback) {
     let restaurant = idb.put('restaurants', restaurantObject)
-    restaurant.then((ae) => {
-      api.favoriteRestaurantByID(restaurantObject, callback);
+    restaurant.then((restaurant) => {
+      api.favoriteRestaurantByID(restaurantObject, (error, success) => {
+        if (error) {
+          saveForSync('sync-favorite', {
+            restaurantId: restaurantObject.id,
+            is_favorite: restaurantObject.is_favorite
+          });
+        }
+        callback(null, restaurant)
+      });
     }).catch((error) => {
       callback(error, null)
     })
