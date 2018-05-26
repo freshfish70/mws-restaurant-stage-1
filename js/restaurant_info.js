@@ -7,6 +7,28 @@ import maps from './googleMaps'
   let currentRestaurant;
   let map;
 
+  /**
+   * Form handling
+   */
+  const form = document.getElementById('restaurant-review-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let formData = new FormData(form);
+    formData.append('restaurant_id', currentRestaurant.id);
+
+    let reviewObject = {};
+    for (const [key, value] of formData) {
+      reviewObject[key] = value;
+    }
+
+    restaurantHandler.reviewRestaurant(formData, reviewObject, (error, review) => {
+      if (error){
+        return console.log(error)
+      }
+      console.log(review)
+    });
+  })
+
   function createFavoriteButton() {
     const addText = "Add to favorite ";
     const removeText = "Remove favorite ";

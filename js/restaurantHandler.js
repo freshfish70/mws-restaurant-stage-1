@@ -324,6 +324,29 @@ let restaurantHandler = function (api) {
   }
 
   /**
+   * Add review to restaurant
+   * setting it in IDB and updating server
+   * 
+   * @param {Object} reviewObject 
+   * @param {Function} callback 
+   */
+  function reviewRestaurant(formData, reviewObject, callback) {
+      api.createReview(formData, (error, response) => {
+        if (error) {
+          saveForSync('sync-review', reviewObject);
+          callback('Failed to create review, saved for sync.', null)
+        }else{
+          idb.put('reviews', response)
+          callback(null, response)
+        }
+      });
+    }
+    
+    // for (let index = 31; index <= 63; index++) {
+    //   api.deleteReviewByID(index, ()=>{})
+    // }
+    
+  /**
    * Restaurant page URL.
    */
   function urlForRestaurant(restaurant) {
@@ -365,7 +388,8 @@ let restaurantHandler = function (api) {
     imageUrlForRestaurant,
     mapMarkerForRestaurant,
     getAllReviewsForRestaurant,
-    favoriteRestaurant
+    favoriteRestaurant,
+    reviewRestaurant
   })
 
 }
