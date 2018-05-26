@@ -272,11 +272,39 @@ let restaurantHandler = function (api) {
 
   }
 
+  /**
+   * Return all saved reviews for syncing with server
+   * 
+   * @param {Function} callback 
+   */
+  function getOfflineReviews(callback) {
+
+    getAllFromIDBStore('sync-review').then(reviews => {
+      callback(null, reviews)
+    }).catch(err => {
+      console.warn('Failed too get offline reviews from idb');
+      callback(true, null)
+    })
+
+  }
+
+  /**
+   * Return all reviews for a restaurant
+   * 
+   * @param {Number} id 
+   * @param {Function} callback 
+   */
   function getAllReviewsForRestaurant(id, callback) {
 
     getAllFromIDBStore('reviews').then(reviews => {
-      callback(null, reviews);
-      callback = undefined;
+      getOfflineReviews((error, offlineReviews) => {
+        if (!error){
+          Object.assign(reviews, offlineReviews);
+        }
+        callback(null, reviews);
+        callback = undefined;
+      });
+
     }).catch(err => {
       console.warn('Failed too get reviews from idb, fetching');
     }).finally(() => {
@@ -331,21 +359,21 @@ let restaurantHandler = function (api) {
    * @param {Function} callback 
    */
   function reviewRestaurant(formData, reviewObject, callback) {
-      api.createReview(formData, (error, response) => {
-        if (error) {
-          saveForSync('sync-review', reviewObject);
-          callback('Failed to create review, saved for sync.', reviewObject)
-        }else{
-          idb.put('reviews', response)
-          callback(null, response)
-        }
-      });
-    }
-    
-    // for (let index = 31; index <= 63; index++) {
-    //   api.deleteReviewByID(index, ()=>{})
-    // }
-    
+    api.createReview(formData, (error, response) => {
+      if (error) {
+        saveForSync('sync-review', reviewObject);
+        callback('Failed to create review, saved for sync.', reviewObject)
+      } else {
+        idb.put('reviews', response)
+        callback(null, response)
+      }
+    });
+  }
+
+  // for (let index = 31; index <= 63; index++) {
+  //   api.deleteReviewByID(index, ()=>{})
+  // }
+
   /**
    * Restaurant page URL.
    */
