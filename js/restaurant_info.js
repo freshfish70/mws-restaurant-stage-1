@@ -15,14 +15,17 @@ import maps from './googleMaps'
     e.preventDefault();
     let formData = new FormData(form);
     formData.append('restaurant_id', currentRestaurant.id);
+    formData.append('updatedAt', Date.now());
 
     let reviewObject = {};
-    for (const [key, value] of formData) {
+    for (let [key, value] of formData) {
+      if (!isNaN(value)){
+        value = parseInt(value);
+      }
       reviewObject[key] = value;
     }
-
     restaurantHandler.reviewRestaurant(formData, reviewObject, (error, review) => {
-      if (error){
+      if (error) {
         console.log(error)
       }
       fillReviewList([review]);
@@ -177,7 +180,7 @@ import maps from './googleMaps'
     }
   }
 
-  const fillReviewList = (reviews)=> {
+  const fillReviewList = (reviews) => {
     const ul = document.getElementById('reviews-list');
     reviews.forEach(review => {
       ul.appendChild(createReviewHTML(review));
@@ -221,6 +224,7 @@ import maps from './googleMaps'
     reviewTop.appendChild(name);
 
     const date = document.createElement('time');
+    console.log(review.updatedAt)
     const dateTime = new Date(review.updatedAt);
     date.innerHTML = (dateTime.getMonth() + 1) + '/' + dateTime.getDate() + '/' + dateTime.getFullYear();
     reviewTop.appendChild(date);
