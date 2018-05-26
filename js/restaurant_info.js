@@ -23,7 +23,7 @@ import maps from './googleMaps'
 
     restaurantHandler.reviewRestaurant(formData, reviewObject, (error, review) => {
       if (error){
-        return console.log(error)
+        console.log(error)
       }
       fillReviewList([review]);
     });

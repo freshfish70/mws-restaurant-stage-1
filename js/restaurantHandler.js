@@ -334,7 +334,7 @@ let restaurantHandler = function (api) {
       api.createReview(formData, (error, response) => {
         if (error) {
           saveForSync('sync-review', reviewObject);
-          callback('Failed to create review, saved for sync.', null)
+          callback('Failed to create review, saved for sync.', reviewObject)
         }else{
           idb.put('reviews', response)
           callback(null, response)
