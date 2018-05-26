@@ -80,23 +80,19 @@ const restaurantHelper = function restaurantHelper(api) {
   /**
    * Create a reivew for a restaurant
    * 
-   * params: {
-              "restaurant_id": <restaurant_id>,
-              "name": <reviewer_name>,
-              "rating": <rating>,
-              "comments": <comment_text>
-      }
+   * FormData fields
+      "restaurant_id": <restaurant_id>,
+      "name": <reviewer_name>,
+      "rating": <rating>,
+      "comments": <comment_text>
    * 
-   * @param {Object} params 
+   * @param {FormData} formData 
    * @param {Function} callback 
    */
-  function createReview(params = {}, callback) {
+  function createReview(formData, callback) {
 
     const data = {
-      body: JSON.stringify(params),
-      headers: {
-        'content-type': 'application/json'
-      }
+      body: formData,
     }
 
     api.execute('post', {
