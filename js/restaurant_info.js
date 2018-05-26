@@ -25,7 +25,7 @@ import maps from './googleMaps'
       if (error){
         return console.log(error)
       }
-      console.log(review)
+      fillReviewList([review]);
     });
   })
 
@@ -177,6 +177,14 @@ import maps from './googleMaps'
     }
   }
 
+  const fillReviewList = (reviews)=> {
+    const ul = document.getElementById('reviews-list');
+    reviews.forEach(review => {
+      ul.appendChild(createReviewHTML(review));
+    });
+    return ul;
+  }
+
   /**
    * Create all reviews HTML and add them to the webpage.
    */
@@ -193,11 +201,8 @@ import maps from './googleMaps'
       container.appendChild(noReviews);
       return;
     }
-    const ul = document.getElementById('reviews-list');
-    reviews.forEach(review => {
-      ul.appendChild(createReviewHTML(review));
-    });
-    container.appendChild(ul);
+
+    container.appendChild(fillReviewList(reviews));
   }
 
   /**
