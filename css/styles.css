@@ -445,7 +445,8 @@ button {
 input,
 textarea,
 fieldset,
-button {
+button,
+select {
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 1rem;
@@ -454,7 +455,8 @@ button {
 }
 
 input,
-textarea {
+textarea,
+select {
   border: 1px solid #ccc;
 }
 
