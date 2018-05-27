@@ -14,6 +14,25 @@ export default class IDBHelper {
   }
 
   /**
+   * Delete data from objectstore
+   * 
+   * @param {string} objectStoreName 
+   * @param {object} dataToStore 
+   */
+  delete(objectStoreName, key, mode = 'readwrite') {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName, mode);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.delete(key)
+        .catch(err => {
+          console.error(err);
+        });
+
+    })
+  }
+
+  /**
    * Put data to objectstore
    * 
    * @param {string} objectStoreName 
@@ -76,7 +95,6 @@ export default class IDBHelper {
         .catch(err => {
           console.error(err);
         });
-
     })
   }
 
