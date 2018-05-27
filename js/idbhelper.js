@@ -118,6 +118,26 @@ export default class IDBHelper {
 
     })
   }
+  /**
+   * Get cursor of object store
+   * 
+   * @param {string} objectStoreName 
+   */
+  getCursor(objectStoreName) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.openCursor()
+        .then((cursor) => {
+          return cursor;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+    })
+  }
 
   /**
    * Returns the promise IDB database
