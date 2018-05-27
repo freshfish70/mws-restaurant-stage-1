@@ -224,8 +224,7 @@ import maps from './googleMaps'
     reviewTop.appendChild(name);
 
     const date = document.createElement('time');
-    console.log(review.updatedAt)
-    const dateTime = new Date(review.updatedAt);
+    const dateTime = new Date(date == isNaN(review.updatedAt) ? review.updatedAt : parseInt(review.updatedAt));
     date.innerHTML = (dateTime.getMonth() + 1) + '/' + dateTime.getDate() + '/' + dateTime.getFullYear();
     reviewTop.appendChild(date);
 
