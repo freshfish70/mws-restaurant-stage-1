@@ -298,7 +298,7 @@ let restaurantHandler = function (api) {
 
     getAllFromIDBStore('reviews').then(reviews => {
       getOfflineReviews((error, offlineReviews) => {
-        if (!error){
+        if (!error) {
           Object.assign(reviews, offlineReviews);
         }
         callback(null, reviews);
@@ -370,7 +370,73 @@ let restaurantHandler = function (api) {
     });
   }
 
-  // for (let index = 31; index <= 63; index++) {
+  /**
+   * Create a FormData from an object
+   * 
+   * @param {Object} object 
+   */
+  function createFormData(object) {
+    let formData = new FormData();
+    for (var [key, value] of Object.entries(object)) {
+      formData.append(key, value);
+    }
+  }
+
+  /**
+   * Sync offline saved reviews with server
+   */
+  function syncReviews() {
+    idb.getCursor('sync-review').then(cursor => {
+      if (!cursor) return console.log('No review to sync.');
+      return cursor;
+    }).then(function itterate(cursor) {
+      if (!cursor) return;
+
+      const formData = createFormData(cursor.value);
+      reviewRestaurant(formData, cursor.value, (error, success) => {
+        if (error) return console.log(error);
+        idb.delete('sync-review', cursor.key);
+      });
+      return cursor.continue().then(itterate);
+    })
+  }
+
+  /**
+   * Sync offline saved favorites with server
+   */
+  function syncFavorites() {
+    idb.getCursor('sync-favorite').then(cursor => {
+      if (!cursor) return console.log('No favorites to sync.');
+      return cursor;
+    }).then(function itterate(cursor) {
+      if (!cursor) return;
+      const restaurant = idb.get('restaurants', cursor.value.restaurantId)
+      restaurant.then((restaurant) => {
+        restaurant.is_favorite = cursor.value.is_favorite
+        favoriteRestaurant(restaurant, (error, success) => {
+          if (error) return console.log(error);
+          idb.delete('sync-favorite', cursor.key);
+        });
+      })
+      return cursor.continue().then(itterate);
+    })
+  }
+
+  /**
+   * Sync offlinedata if we've get an OK response 
+   * from server
+   */
+  function syncOfflineData() {
+
+    fetch('/').then(response => {
+      if (!response.ok) return
+      syncReviews();
+      syncFavorites();
+    })
+
+  }
+  
+  // for (let index = 31; index <= 65; index++) {
   //   api.deleteReviewByID(index, ()=>{})
   // }
 
@@ -401,6 +467,12 @@ let restaurantHandler = function (api) {
     });
     return marker;
   }
+
+
+  /**
+   * Sync offline data
+   */
+  syncOfflineData();
 
   /**
    * Returns a frozen object to prevent
