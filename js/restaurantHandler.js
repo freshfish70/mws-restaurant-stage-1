@@ -282,7 +282,6 @@ let restaurantHandler = function (api) {
     getAllFromIDBStore('sync-review').then(reviews => {
       callback(null, reviews)
     }).catch(err => {
-      console.warn('Failed too get offline reviews from idb');
       callback(true, null)
     })
 
