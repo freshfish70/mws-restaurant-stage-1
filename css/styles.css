@@ -399,6 +399,46 @@ nav h1 a {
   letter-spacing: 0.1rem;
 }
 
+/*** GENERAL ***/
+
+#message{
+  transition: all 0.5s;
+}
+
+.alert-box{
+  font-size: 1.2rem;  
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0 50px 0;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  z-index: 3;
+  bottom: 20px;
+  width: calc(50% - 160px);  
+  align-self: center;
+  box-shadow: 0px 2px 2px #3b3b3b
+}
+
+.alert-error{
+  background: #bc3437;
+  border: 1px solid #822b2b;
+  color: #fff;
+}
+
+.alert-success{
+  background: #49b661;
+  border: 1px solid #4f8e49;
+}
+
+.opacity-0{
+  opacity: 0;
+}
+
+.opacity-1{
+  opacity: 1;
+}
+
 #page-error {
   font-size: 2rem;
   text-align: center;

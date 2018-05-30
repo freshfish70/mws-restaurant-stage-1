@@ -28,7 +28,8 @@ import maps from './googleMaps'
       if (error) {
         console.log(error)
       }
-      fillReviewList([review]);
+      const list = fillReviewList([review]);
+      list.children[list.children.length - 1].scrollIntoView({behavior: "smooth"})
     });
   })
 
