@@ -129,7 +129,7 @@ nav h1 a {
 
 /* Add a slash symbol (/) before/behind each list item */
 
-#breadcrumb li+li:before {
+#breadcrumb li + li:before {
   padding: 8px;
   color: black;
   content: '/\00a0';
@@ -251,8 +251,8 @@ nav h1 a {
   text-transform: uppercase;
 }
 
-#restaurants-list li>a:hover,
-#restaurants-list li>a:focus {
+#restaurants-list li > a:hover,
+#restaurants-list li > a:focus {
   background: #d24144;
 }
 
@@ -401,41 +401,37 @@ nav h1 a {
 
 /*** GENERAL ***/
 
-#message{
-  transition: all 0.5s;
-}
-
-.alert-box{
-  font-size: 1.2rem;  
+.alert-box {
+  font-size: 1.2rem;
   text-align: center;
-  padding: 20px;
-  margin: 20px 0 50px 0;
+  padding: 15px;
+  margin: 20px 0 50px 20px;
   border-radius: 5px;
   color: #fff;
   position: fixed;
   z-index: 3;
-  bottom: 20px;
-  width: calc(50% - 160px);  
+  top: 180px;
+  width: calc(50% - 160px);
   align-self: center;
-  box-shadow: 0px 2px 2px #3b3b3b
+  box-shadow: 0px 2px 2px #3b3b3b;
 }
 
-.alert-error{
+.alert-error {
   background: #bc3437;
   border: 1px solid #822b2b;
   color: #fff;
 }
 
-.alert-success{
+.alert-success {
   background: #49b661;
   border: 1px solid #4f8e49;
 }
 
-.opacity-0{
+.opacity-0 {
   opacity: 0;
 }
 
-.opacity-1{
+.opacity-1 {
   opacity: 1;
 }
 
@@ -468,12 +464,12 @@ nav h1 a {
   right: 10px;
 }
 
-#restaurant-review-form>div {
+#restaurant-review-form > div {
   display: flex;
   flex-direction: column;
 }
 
-#restaurant-review-form input[type=radio] {
+#restaurant-review-form input[type='radio'] {
   margin: 0px 25px 0 10px;
 }
 
@@ -500,17 +496,21 @@ select {
   border: 1px solid #ccc;
 }
 
-input[type=button],input[type=submit], button {
+input[type='button'],
+input[type='submit'],
+button {
   padding: 10px 15px;
   color: #fff;
   background: #252931;
 }
 
-input[type=button],input[type=submit] {
-  width:140px;
+input[type='button'],
+input[type='submit'] {
+  width: 140px;
 }
 
-input[type=submit]:hover, input[type=button]:hover {
+input[type='submit']:hover,
+input[type='button']:hover {
   background: #363b46;
 }
 
@@ -522,7 +522,7 @@ input[type=submit]:hover, input[type=button]:hover {
 
 @media screen and (max-width: 960px) {
   #restaurant-name {
-    margin: .5rem 0 1.5rem;
+    margin: 0.5rem 0 1.5rem;
   }
   .inside header {
     position: unset;
@@ -584,24 +584,24 @@ input[type=submit]:hover, input[type=button]:hover {
   }
 }
 
-.star-front{
+.star-front {
   position: relative;
 }
 
-.star-active{
-  color:yellow;
+.star-active {
+  color: yellow;
 }
 
-.star-front::after{
+.star-front::after {
   position: absolute;
   margin: 0 25px;
   padding: 0 10px;
   font-size: 2rem;
   background: #fff;
   right: 0;
-  content:"★";
+  content: '★';
 }
 
-.star-single::after{
-  content:"★";
+.star-single::after {
+  content: '★';
 }
