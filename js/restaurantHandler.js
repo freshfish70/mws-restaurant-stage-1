@@ -1,8 +1,14 @@
 import idbhelper from './idbhelper'
 import DBHelper from './dbhelper.js'
 import restaurantDB from './database'
+import restaurantHelper from './restaurantHelper'
+import apiHelper from './apiHelper'
 
-let restaurantHandler = function () {
+/**
+ * 
+ * @param {restaurantHelper} api 
+ */
+let restaurantHandler = function (api) {
 
   const idb = new idbhelper(restaurantDB);
 
@@ -93,7 +99,7 @@ let restaurantHandler = function () {
   function fetchAll(callback) {
 
     if (fetchTimerPassed()) {
-      DBHelper.fetchRestaurants((error, restaurants) => {
+      api.getAllRestaurants((error, restaurants) => {
         if (error) return callback(error, null);
         putItemsToIDB('restaurants', restaurants);
         callback(null, restaurants);
@@ -109,7 +115,7 @@ let restaurantHandler = function () {
    */
   function fetchById(id, callback) {
 
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    api.getRestaurantByID(id, (error, restaurant) => {
       if (error) return callback(error, null);
       putItemsToIDB('restaurants', [restaurant]);
       callback(null, restaurant);
@@ -260,11 +266,178 @@ let restaurantHandler = function () {
       DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
         if (error) return callback(error, null);
         putItemsToIDB('restaurants', restaurants);
-        callback ? callback(null, filterRestaurantByCuisineNeighborhood(cuisine, neighborhood, restaurants)) : undefined ;
+        callback ? callback(null, filterRestaurantByCuisineNeighborhood(cuisine, neighborhood, restaurants)) : undefined;
       });
     })
 
   }
+
+  /**
+   * Return all saved reviews for syncing with server
+   * 
+   * @param {Function} callback 
+   */
+  function getOfflineReviews(callback) {
+
+    getAllFromIDBStore('sync-review').then(reviews => {
+      callback(null, reviews)
+    }).catch(err => {
+      callback(true, null)
+    })
+
+  }
+
+  /**
+   * Return all reviews for a restaurant
+   * 
+   * @param {Number} id 
+   * @param {Function} callback 
+   */
+  function getAllReviewsForRestaurant(id, callback) {
+
+    getAllFromIDBStore('reviews').then(reviews => {
+      getOfflineReviews((error, offlineReviews) => {
+        if (!error) {
+          Object.assign(reviews, offlineReviews);
+        }
+        callback(null, reviews);
+        callback = undefined;
+      });
+
+    }).catch(err => {
+      console.warn('Failed too get reviews from idb, fetching');
+    }).finally(() => {
+      api.getRestaurantReviews(id, (error, reviews) => {
+        if (error) return callback(error, null);
+        putItemsToIDB('reviews', reviews);
+        callback ? callback(null, reviews) : undefined;
+      });
+    })
+
+  }
+
+  /**
+   * Put review/favorite to IDB for syncing with database when online
+   * 
+   * @param {String} storeName 
+   * @param {Object} object 
+   */
+  function saveForSync(storeName, objectData) {
+    idb.put(storeName, objectData);
+  }
+
+  /**
+   * Favorite a restaurant
+   * setting it in IDB and updating server
+   * 
+   * @param {Object} restaurantObject 
+   * @param {Function} callback 
+   */
+  function favoriteRestaurant(restaurantObject, callback) {
+    let restaurant = idb.put('restaurants', restaurantObject)
+    restaurant.then((restaurant) => {
+      api.favoriteRestaurantByID(restaurantObject, (error, success) => {
+        if (error) {
+          saveForSync('sync-favorite', {
+            restaurantId: restaurantObject.id,
+            is_favorite: restaurantObject.is_favorite
+          });
+        }
+        callback(null, restaurant)
+      });
+    }).catch((error) => {
+      callback(error, null)
+    })
+  }
+
+  /**
+   * Add review to restaurant
+   * setting it in IDB and updating server
+   * 
+   * @param {Object} reviewObject 
+   * @param {Function} callback 
+   */
+  function reviewRestaurant(formData, reviewObject, callback) {
+    api.createReview(formData, (error, response) => {
+      if (error) {
+        saveForSync('sync-review', reviewObject);
+        callback('Failed to create review, saved for sync.', reviewObject)
+      } else {
+        idb.put('reviews', response)
+        callback(null, response)
+      }
+    });
+  }
+
+  /**
+   * Create a FormData from an object
+   * 
+   * @param {Object} object 
+   */
+  function createFormData(object) {
+    let formData = new FormData();
+    for (var [key, value] of Object.entries(object)) {
+      formData.append(key, value);
+    }
+  }
+
+  /**
+   * Sync offline saved reviews with server
+   */
+  function syncReviews() {
+    idb.getCursor('sync-review').then(cursor => {
+      if (!cursor) return console.log('No review to sync.');
+      return cursor;
+    }).then(function itterate(cursor) {
+      if (!cursor) return;
+
+      const formData = createFormData(cursor.value);
+      reviewRestaurant(formData, cursor.value, (error, success) => {
+        if (error) return console.log(error);
+        idb.delete('sync-review', cursor.key);
+      });
+      return cursor.continue().then(itterate);
+    })
+  }
+
+  /**
+   * Sync offline saved favorites with server
+   */
+  function syncFavorites() {
+    idb.getCursor('sync-favorite').then(cursor => {
+      if (!cursor) return console.log('No favorites to sync.');
+      return cursor;
+    }).then(function itterate(cursor) {
+      if (!cursor) return;
+      const restaurant = idb.get('restaurants', cursor.value.restaurantId)
+      restaurant.then((restaurant) => {
+        restaurant.is_favorite = cursor.value.is_favorite
+        favoriteRestaurant(restaurant, (error, success) => {
+          if (error) return console.log(error);
+          idb.delete('sync-favorite', cursor.key);
+        });
+      })
+      return cursor.continue().then(itterate);
+    })
+  }
+
+  /**
+   * Sync offlinedata if we've get an OK response 
+   * from server
+   */
+  function syncOfflineData() {
+
+    fetch('/').then(response => {
+      if (!response.ok) return
+      syncReviews();
+      syncFavorites();
+    })
+
+  }
+  
+  // for (let index = 31; index <= 65; index++) {
+  //   api.deleteReviewByID(index, ()=>{})
+  // }
 
   /**
    * Restaurant page URL.
@@ -287,12 +460,18 @@ let restaurantHandler = function () {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
       title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
+      url: urlForRestaurant(restaurant),
       map: map,
       animation: google.maps.Animation.DROP
     });
     return marker;
   }
+
+
+  /**
+   * Sync offline data
+   */
+  syncOfflineData();
 
   /**
    * Returns a frozen object to prevent
@@ -306,9 +485,16 @@ let restaurantHandler = function () {
     getRestaurantByCuisineAndNeighborhood,
     urlForRestaurant,
     imageUrlForRestaurant,
-    mapMarkerForRestaurant
+    mapMarkerForRestaurant,
+    getAllReviewsForRestaurant,
+    favoriteRestaurant,
+    reviewRestaurant
   })
 
 }
 
-export default restaurantHandler();
+export default restaurantHandler(
+  restaurantHelper(apiHelper({
+    url: 'http://127.0.0.1:1337/'
+  }))
+);

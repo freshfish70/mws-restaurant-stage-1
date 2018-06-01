@@ -14,6 +14,25 @@ export default class IDBHelper {
   }
 
   /**
+   * Delete data from objectstore
+   * 
+   * @param {string} objectStoreName 
+   * @param {object} dataToStore 
+   */
+  delete(objectStoreName, key, mode = 'readwrite') {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName, mode);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.delete(key)
+        .catch(err => {
+          console.error(err);
+        });
+
+    })
+  }
+
+  /**
    * Put data to objectstore
    * 
    * @param {string} objectStoreName 
@@ -56,6 +75,30 @@ export default class IDBHelper {
   }
 
   /**
+   * Get all items in objectstore by index and value
+   * 
+   * @param {String} objectStoreName 
+   * @param {String} index 
+   * @param {String|Number} value 
+   */
+  getByIndex(objectStoreName, index, value = null) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+      let storeIndex = restaurantStore.index(index);
+
+      return storeIndex.getAll(value)
+        .then(data => {
+          if (data === undefined || data === null) return null;
+          return data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    })
+  }
+
+  /**
    * Get all items from the objectstore
    * 
    * @param {string} objectStoreName 
@@ -68,6 +111,26 @@ export default class IDBHelper {
       return restaurantStore.getAll()
         .then((data) => {
           return data;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+    })
+  }
+  /**
+   * Get cursor of object store
+   * 
+   * @param {string} objectStoreName 
+   */
+  getCursor(objectStoreName) {
+    return this.database.then(function (db) {
+      let tx = db.transaction(objectStoreName);
+      let restaurantStore = tx.objectStore(objectStoreName);
+
+      return restaurantStore.openCursor()
+        .then((cursor) => {
+          return cursor;
         })
         .catch(err => {
           console.error(err);

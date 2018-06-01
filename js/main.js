@@ -101,7 +101,7 @@ let main = (function () {
       center: loc,
       scrollwheel: false
     });
-    
+
     addMarkersToMap(allRestaurants);
   }
 
@@ -169,12 +169,22 @@ let main = (function () {
     });
 
   }
+  const addFavoriteBadge = (isFavorite) =>{
+    const favoriteDiv = document.createElement('div');
 
+    favoriteDiv.className = "star-front"
+    if (isFavorite === "true") {
+      favoriteDiv.classList.add("star-active");
+    };
+    return favoriteDiv;
+  }
   /**
    * Create restaurant HTML.
    */
   const createRestaurantHTML = (restaurant) => {
+
     const li = document.createElement('li');
+    li.appendChild(addFavoriteBadge(restaurant.is_favorite));
 
     const picture = document.createElement('picture');
     const sourceWebP = document.createElement('source');

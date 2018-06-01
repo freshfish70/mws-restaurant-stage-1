@@ -143,32 +143,5 @@ export default class DBHelper {
     });
   }
 
-  /**
-   * Restaurant page URL.
-   */
-  static urlForRestaurant(restaurant) {
-    return (`./restaurant.html?id=${restaurant.id}`);
-  }
-
-  /**
-   * Restaurant image URL.
-   */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/dist/img/${restaurant.photograph}`);
-  }
-
-  /**
-   * Map marker for a restaurant.
-   */
-  static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP
-    });
-    return marker;
-  }
 
 }
