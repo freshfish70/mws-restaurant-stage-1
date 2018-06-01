@@ -10,7 +10,7 @@
 
 - Node / NPM
 - Data server:
-  - https://github.com/udacity/mws-restaurant-stage-2
+  - https://github.com/udacity/mws-restaurant-stage-3
 - Web server:
   - https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb?hl=en
 
